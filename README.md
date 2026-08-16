@@ -14,23 +14,7 @@
 
 > **重要：本包是零依赖的**（host 半不 import 任何 `@deepseek-ai/*` 包，只使用 `ctx` 上的公共服务；client 半仅 `require("react")`，由浏览器模块表提供）。它**必须**作为唯一的包实例加载——dsh 的 agent scope 依赖 `@deepseek-ai/dsh-scope` 的模块私有 Symbol，任何 `@deepseek-ai/*` 核心包出现第二份副本都会让 scope 识别失效、所有会话无法创建。所以不要把本包（或任何会带入 `@deepseek-ai` peer 依赖的包）装进 `profiles/web/node_modules`，也不要给它加 `peerDependencies`。
 
-### 一行安装（推荐）
-
-安装脚本自动完成三步：在 profile 根 `npm install`（包进入共享模块根，不产生双包）→ 幂等写入 `cordis.patch.yml` 注册行 → 校验解析。可重复执行，已注册时自动跳过。
-
-**Windows（PowerShell）：**
-```powershell
-irm https://raw.githubusercontent.com/the-ninth-moon/dsh-preset-switch/master/install.ps1 | iex
-```
-
-**macOS / Linux（bash）：**
-```bash
-curl -fsSL https://raw.githubusercontent.com/the-ninth-moon/dsh-preset-switch/master/install.sh | bash
-```
-
-执行后**重启 dsh** 即生效。
-
-### 手动安装（了解细节时）
+### 手动安装
 
 1. 在 profile 根安装包（注意：不是 `profiles/web` 下，避免双包）：
 
