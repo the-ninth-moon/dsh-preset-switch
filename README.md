@@ -33,6 +33,20 @@ npm install github:the-ninth-moon/dsh-preset-switch
       name: 'dsh-preset-switch'
 ```
 
+大概长这样
+```yaml
+# Your patch layer for this dsh profile, applied after every bundle layer:
+# a top-level YAML array of loader patch entries (id-targeted config
+# overrides, disables, and insert lists; `!!js` expressions allowed).
+
+# dsh-preset-switch: mid-session agent-preset switching (composer button beside
+# the access-mode control + /preset command).
+- insert:
+    - id: preset-switch
+      name: 'dsh-preset-switch'
+
+```
+
 3. 重启 dsh 后生效。
 
 ## 使用
