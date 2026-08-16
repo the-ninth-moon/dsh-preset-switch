@@ -12,19 +12,23 @@
 
 前提：dsh Web 版（本包依赖 host 侧 `commands` 与 `agentPresets` 服务，两者在默认 profile 中均已挂载）。
 
-### 方式一：从 GitHub 安装（推荐）
+> **重要：本包是零依赖的**（host 半不 import 任何 `@deepseek-ai/*` 包，只使用 `ctx` 上的公共服务；client 半仅 `require("react")`，由浏览器模块表提供）。它**必须**作为唯一的包实例加载——dsh 的 agent scope 依赖 `@deepseek-ai/dsh-scope` 的模块私有 Symbol，任何 `@deepseek-ai/*` 核心包出现第二份副本都会让 scope 识别失效、所有会话无法创建。所以不要把本包（或任何会带入 `@deepseek-ai` peer 依赖的包）装进 `profiles/web/node_modules`，也不要给它加 `peerDependencies`。
+
+### 方式一：GitHub 安装（npm）
+
+本包不发布到 npm registry（仓库名即安装源），且无任何 npm 依赖，所以 `npm install` 只会放下本包本身、不会复制任何 `@deepseek-ai` 副本：
 
 ```bash
-# 在你的 dsh profile 的 web 目录下
-cd $DSH_HOME/profiles/web
+# 注意：必须在 profile 根（junction 到共享模块根）下执行，而不是 profiles/web
+cd $DSH_HOME/profiles
 npm install github:the-ninth-moon/dsh-preset-switch
 ```
 
-> 注意：本机 profile 的 `node_modules` 是 junction 到部署共享模块根的，`npm install` 会把包链接进 `profiles/node_modules`，loader 即可解析。
+> 若你的 `profiles/node_modules` 不是 junction 而是真实目录，安装后请把 `profiles/node_modules/dsh-preset-switch` 放进 dsh 实际解析模块的根（与 `@deepseek-ai` 同级的目录）。
 
-### 方式二：手动放置
+### 方式二：手动放置（推荐，零风险）
 
-将本包（`package.json` + `lib/`）整个目录复制到 profile 的 `node_modules` 下：
+将本包（`package.json` + `lib/`）整个目录复制到**共享模块根**（与 `@deepseek-ai` 同级的 `node_modules`）下：
 
 ```text
 $DSH_HOME/profiles/node_modules/dsh-preset-switch/
