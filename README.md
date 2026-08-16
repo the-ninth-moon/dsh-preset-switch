@@ -14,32 +14,34 @@
 
 > **重要：本包是零依赖的**（host 半不 import 任何 `@deepseek-ai/*` 包，只使用 `ctx` 上的公共服务；client 半仅 `require("react")`，由浏览器模块表提供）。它**必须**作为唯一的包实例加载——dsh 的 agent scope 依赖 `@deepseek-ai/dsh-scope` 的模块私有 Symbol，任何 `@deepseek-ai/*` 核心包出现第二份副本都会让 scope 识别失效、所有会话无法创建。所以不要把本包（或任何会带入 `@deepseek-ai` peer 依赖的包）装进 `profiles/web/node_modules`，也不要给它加 `peerDependencies`。
 
-### 方式一：GitHub 安装（npm）
+### 一行安装（推荐）
 
-本包不发布到 npm registry（仓库名即安装源），且无任何 npm 依赖，所以 `npm install` 只会放下本包本身、不会复制任何 `@deepseek-ai` 副本：
+安装脚本自动完成三步：在 profile 根 `npm install`（包进入共享模块根，不产生双包）→ 幂等写入 `cordis.patch.yml` 注册行 → 校验解析。可重复执行，已注册时自动跳过。
+
+**Windows（PowerShell）：**
+```powershell
+irm https://raw.githubusercontent.com/the-ninth-moon/dsh-preset-switch/master/install.ps1 | iex
+```
+
+**macOS / Linux（bash）：**
+```bash
+curl -fsSL https://raw.githubusercontent.com/the-ninth-moon/dsh-preset-switch/master/install.sh | bash
+```
+
+执行后**重启 dsh** 即生效。
+
+### 手动安装（了解细节时）
+
+1. 在 profile 根安装包（注意：不是 `profiles/web` 下，避免双包）：
 
 ```bash
-# 注意：必须在 profile 根（junction 到共享模块根）下执行，而不是 profiles/web
 cd $DSH_HOME/profiles
 npm install github:the-ninth-moon/dsh-preset-switch
 ```
 
 > 若你的 `profiles/node_modules` 不是 junction 而是真实目录，安装后请把 `profiles/node_modules/dsh-preset-switch` 放进 dsh 实际解析模块的根（与 `@deepseek-ai` 同级的目录）。
 
-### 方式二：手动放置（推荐，零风险）
-
-将本包（`package.json` + `lib/`）整个目录复制到**共享模块根**（与 `@deepseek-ai` 同级的 `node_modules`）下：
-
-```text
-$DSH_HOME/profiles/node_modules/dsh-preset-switch/
-  package.json
-  lib/index.js
-  lib/client.js
-```
-
-### 注册插件
-
-编辑 profile 的 `$DSH_HOME/profiles/web/cordis.patch.yml`，加入：
+2. 编辑 `$DSH_HOME/profiles/web/cordis.patch.yml`，加入：
 
 ```yaml
 - insert:
@@ -47,7 +49,7 @@ $DSH_HOME/profiles/node_modules/dsh-preset-switch/
       name: 'dsh-preset-switch'
 ```
 
-重启 dsh 后生效。
+3. 重启 dsh 后生效。
 
 ## 使用
 
