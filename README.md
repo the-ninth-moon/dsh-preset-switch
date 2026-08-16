@@ -12,15 +12,15 @@
 
 前提：dsh Web 版（本包依赖 host 侧 `commands` 与 `agentPresets` 服务，两者在默认 profile 中均已挂载）。
 
-### 方式一：npm 安装（推荐）
-
-在你的 dsh profile 目录（例如 `$DSH_HOME/profiles/web`）执行：
+### 方式一：从 GitHub 安装（推荐）
 
 ```bash
-npm install dsh-preset-switch
-# 或直接从 GitHub 安装
+# 在你的 dsh profile 的 web 目录下
+cd $DSH_HOME/profiles/web
 npm install github:the-ninth-moon/dsh-preset-switch
 ```
+
+> 注意：本机 profile 的 `node_modules` 是 junction 到部署共享模块根的，`npm install` 会把包链接进 `profiles/node_modules`，loader 即可解析。
 
 ### 方式二：手动放置
 
