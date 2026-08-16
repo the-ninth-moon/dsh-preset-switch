@@ -69,6 +69,10 @@ $DSH_HOME/profiles/node_modules/dsh-preset-switch/
 
 会话历史中已有的轮次不变，从下一轮起使用新模式的工具与提示词。
 
+## 版本
+
+- **v0.1.0**（当前）：首个可用版本，已在 dsh Web（Windows profile）实测：安装 → 注册 → 重启后按钮出现，切换 + 模型通知均正常。
+
 ## 许可
 
 MIT
